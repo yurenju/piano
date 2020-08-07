@@ -1,0 +1,56 @@
+div {
+    box-sizing: border-box;
+}
+
+:root {
+    --widthWhite: 100% / 52;
+    --widthBlack: 100% / 80;
+}
+
+#root {
+    position: relative;
+    margin: 5px;
+}
+
+#input-selector {
+    margin-top: 2em;
+}
+
+.white-keys > div {
+    display: inline-block;
+    height: 16em;
+    width: calc(var(--widthWhite));
+    border: black 1px solid;
+}
+
+.black-keys {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+}
+
+.black-keys > div {
+    display: inline-block;
+    height: 12em;
+    width: calc(var(--widthBlack));
+    background-color: black;
+    margin-left: calc(var(--widthWhite) - var(--widthBlack));
+
+}
+
+.black-keys > div:first-child {
+    margin-left: calc(var(--widthWhite) - var(--widthBlack) / 2);
+}
+
+.black-keys > div:nth-child(5n+2), .black-keys > div:nth-child(5n+4) {
+    margin-left: calc(var(--widthWhite) * 2 - var(--widthBlack));
+}
+
+div.active {
+    background-color: #e33371;
+}
+
+div.pedaled, div.active.pedaled {
+    background-color: #9a0036;
+}
