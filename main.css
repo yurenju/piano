@@ -49,11 +49,11 @@ div {
   margin-left: calc(var(--widthWhite) * 2 - var(--widthBlack));
 }
 
-div.active {
+div.pressed {
   background-color: #e33371;
 }
 
 div.pedaled,
-div.active.pedaled {
+div.pressed.pedaled {
   background-color: #9a0036;
 }

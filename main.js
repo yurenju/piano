@@ -1,4 +1,5 @@
-const sequence = [
+// layout for a set of keys, first is position, second is black (true) or white (false)
+const layout = [
   [0, false],
   [0, true],
   [1, false],
@@ -18,16 +19,17 @@ function onMessage(event) {
   const el = document.querySelector(`[data-number="${number}"]`);
   console.log("channel", channel, "number", number, "value", value);
 
+  // reference https://github.com/mikaeljorhult/midi-events/blob/master/src/main.js
   if (channel < 144) {
     // note off
-    el.classList.remove("active");
+    el.classList.remove("pressed");
   } else if (channel < 160) {
     // note on
-    el.classList.add("active");
+    el.classList.add("pressed");
   } else if (channel < 208 && channel > 191) {
     // control change
     if (number === 64) {
-      const pressedKeys = [...document.getElementsByClassName("active")];
+      const pressedKeys = [...document.getElementsByClassName("pressed")];
       if (value >= 64) {
         pressedKeys.forEach((key) => key.classList.add("pedaled"));
       } else {
@@ -40,9 +42,11 @@ function onMessage(event) {
 function renderPiano(el) {
   let whiteKeys = [];
   let blackKeys = [];
+
+  // 21 - 108 is standard piano key range
   for (let i = 21; i < 109; i++) {
     const index = i % 12;
-    const pos = sequence[index];
+    const pos = layout[index];
     if (pos[1]) {
       blackKeys.push(`<div data-number="${i}"></div>`);
     } else {
@@ -54,7 +58,8 @@ function renderPiano(el) {
     `<div class="white-keys">${whiteKeys.join("")}</div>`;
 }
 
-function listenEvent(inputs, index) {
+// list event from midi inputs, index -1 is listening all inputs
+function listenEvent(inputs, index = -1) {
   // index = -1 means listen all midi inputs
   inputs.forEach((input, i) => {
     if (i === index || index < 0) {
@@ -65,7 +70,7 @@ function listenEvent(inputs, index) {
   });
 }
 
-function renderInputSelector(el, inputs) {
+function renderSettings(el, inputs) {
   const id = "input-select";
   const options = [];
   options.push('<option value="-1">Listen all MIDI inputs</option>');
@@ -75,6 +80,7 @@ function renderInputSelector(el, inputs) {
     );
   });
   el.innerHTML = `<select id="${id}">${options.join("")}</select>`;
+
   const select = document.getElementById(id);
   select.addEventListener("change", (event) => {
     const index = Number.parseInt(event.target.value);
@@ -84,14 +90,14 @@ function renderInputSelector(el, inputs) {
 
 async function main() {
   const piano = document.getElementById("piano");
-  const inputSelector = document.getElementById("input-selector");
+  const settings = document.getElementById("settings");
 
   try {
     const access = await navigator.requestMIDIAccess();
     const inputs = [...access.inputs.values()];
-    listenEvent(inputs, -1); // listen all midi input
+    listenEvent(inputs);
     renderPiano(piano);
-    renderInputSelector(inputSelector, inputs);
+    renderSettings(settings, inputs);
   } catch (e) {
     alert(e);
   }
