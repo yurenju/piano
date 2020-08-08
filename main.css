@@ -5,6 +5,8 @@ div {
 :root {
     --widthWhite: 100% / 52;
     --widthBlack: 100% / 80;
+    --heightWhite: 100vw / 10;
+    --heightBlack: 100vw / 14;
 }
 
 #root {
@@ -18,7 +20,7 @@ div {
 
 .white-keys > div {
     display: inline-block;
-    height: 16em;
+    height: calc(var(--heightWhite));
     width: calc(var(--widthWhite));
     border: black 1px solid;
 }
@@ -32,7 +34,7 @@ div {
 
 .black-keys > div {
     display: inline-block;
-    height: 12em;
+    height: calc(var(--heightBlack));
     width: calc(var(--widthBlack));
     background-color: black;
     margin-left: calc(var(--widthWhite) - var(--widthBlack));
